@@ -1,5 +1,70 @@
 # MagmaDNN Benchmarksuite
 
+Due to the continuous development of hardware as well as the availability of large-scale training datasets the use of machine learning using Deep Neural Networks (DNN) has increased significantly.
+This has had a major impact on a variety of scientific research areas, such as object recognition and classification, speech recognition as well as speech recognition, and speech synthesis.
+
+The scalability of training DNNs with classical machine learning frameworks poses one big hurdle- it relies on homogeneous computing systems to train efficiently. 
+The MagmaDNN framework for data analytics and machine learning uses scalable linear algebra routines of the MAGMA library which applies solutions from parallel distributed computing on current and future heterogeneous computing architectures. 
+
+In this research practicum, a benchmark suite based on the currently available version 1.2 of MagmaDNN was developed to evaluate the performance of individual compute nodes as well as clusters of heterogeneous computing nodes of the Chair of Practical Computer Science at the Chemnitz University of Technology with and without computational accelerators (GPUs), in the domain of DNN.
+
+
+## Install Dependecies
+
+```
+cd /home/user/path
+wget http://icl.utk.edu/projectsfiles/magma/downloads/magma-2.6.0.tar.gz
+tar -xvpf magma-2.6.0.tar.gz
+cd magma-2.6.0/
+mkdir build
+cd build/
+cmake
+-DCMAKE_INSTALL_PREFIX:PATH=/home/user/path/deps/ 
+..
+make -j16
+make install
+
+cd /home/user/path
+wget https://bitbucket.org/icl/magmadnn/get/release-magmadnn-v1.2.tar.gz
+mv icl-magmadnn-20820ee43a0e magmadnn
+cd magmadnn
+#cp ./make.inc-examples/make.inc-standard ./make.inc
+echo "prefix = /home/user/path/deps" > ./make.inc
+echo "TRY_CUDA = 1" >> ./make.inc
+echo "CXX = g++-8" >> ./make.inc
+echo "NVCC = nvcc" >> ./make.inc
+echo "GPU_TARGET = Kepler Pascal Maxwell" >> ./make.inc
+echo "CUDADIR ?= /opt/packages/cudnn-10.2-linux-x64-v7.6.5.32" >> 
+./make.inc
+echo "MAGMADIR ?= /home/user/path/deps" >> 
+./make.inc
+echo "BLASLIB ?= openblas" >> ./make.inc
+cat ./make.inc-examples/make.inc-standard >> ./make.inc
+make -j16
+make install
+
+cd /home/user/path
+wget
+https://download.open-mpi.org/release/open-mpi/v4.1/openmpi-4.1.1.tar.bz2
+tar -xvjpf openmpi-4.1.1.tar.bz2
+cd openmpi-4.1.1/
+./configure --prefix=/home/user/path/deps
+--with-cuda=/usr/include/
+make -j16
+make install
+
+cd /home/user/path Code
+export
+LD_LIBRARY_PATH=/opt/packages/cudnn-10.2-linux-x64-v7.6.5.32/lib64:/home/user/path/deps/lib:$LD_LIBRARY_PATH
+g++ -O3 -DMAGMADNN_HAVE_CUDA -DUSE_GPU -DMAGMADNN_HAVE_MPI -o
+benchmarksuite benchmarksuite.cpp
+-I/home/user/path/deps/include
+-I/opt/packages/cudnn-10.2-linux-x64-v7.6.5.32/include
+-L/home/user/path/deps/lib
+-L/opt/packages/cudnn-10.2-linux-x64-v7.6.5.32/lib64 -lopenblas -lcudart
+-lcudnn -lmagma -lmagmadnn -lmpi_cxx -lmpi -lpthread
+```
+
 ## Compile Benchmarksuite with CUDA Support
 ### 0. Change the path variables
 Inside the benchmarksuite.h file, the dataset_name and dataset_path variables need to be changed according to your directory structure.
